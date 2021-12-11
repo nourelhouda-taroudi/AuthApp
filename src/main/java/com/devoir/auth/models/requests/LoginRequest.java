@@ -1,7 +1,11 @@
 package com.devoir.auth.models.requests;
 
-import javax.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+@Getter
+@Setter
 public class LoginRequest {
     @NotEmpty
     private String email;

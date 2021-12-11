@@ -7,14 +7,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Builder
+@RequiredArgsConstructor
 public class LoginResponse {
-    private final String jwt;
+    @Setter private String jwt;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
-    @Setter private String firstname;
-    @Setter private String lastname;
-    @Setter private Long contactId;
+    @Setter private String name;
     @Setter private String email;
 }

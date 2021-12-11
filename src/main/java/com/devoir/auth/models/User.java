@@ -28,6 +28,7 @@ public class User {
     protected String email;
 
     @NotEmpty(message="Mot de passe est obligatoire.")
+    @JsonIgnore
     protected String password;
 
     protected String phone;
