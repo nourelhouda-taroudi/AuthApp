@@ -39,9 +39,18 @@ public class User {
     @UpdateTimestamp
     private Date updatedAt;
 
-    /*@JsonIgnore
-    @OneToOne(cascade=CascadeType.ALL, mappedBy = "user")
-    protected VerificationToken verificationToken;*/
+    @Builder.Default
+    @Column(columnDefinition = "boolean default true")
+    protected boolean accountNonLocked=true;
+
+    @Builder.Default
+    @Column(columnDefinition = "boolean default true")
+    protected boolean enabled=true;
+
+    @Builder.Default
+    @Column(columnDefinition = "boolean default true")
+    protected boolean credentialsNonExpired=true;
+
 
     public User() {
         super();
