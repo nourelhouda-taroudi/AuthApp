@@ -3,7 +3,7 @@ package com.devoir.auth.filters;
 
 import com.devoir.auth.exceptions.InvalidJwtTokenException;
 import com.devoir.auth.models.User;
-import com.devoir.auth.services.UserRepository;
+import com.devoir.auth.services.UserJpaRepository;
 import com.devoir.auth.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
 
