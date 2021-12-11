@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class AuthServiceImp implements AuthService{
     @Override
     // Create new user
     public User register(RegisterRequest registerRequest) {
-        // Build user
+        // Build user & Encrypt password
         User user = User.builder()
                 .email(registerRequest.getEmail())
                 .name(registerRequest.getName())
@@ -36,7 +36,7 @@ public class AuthServiceImp implements AuthService{
                 .phone(registerRequest.getPhone())
                 .build();
         userJpaRepository.save(user);
-        // Encrypt password
+        
         return user;
     }
 
@@ -49,16 +49,20 @@ public class AuthServiceImp implements AuthService{
             throw new LoginException("Email et mot de passe sont obligatoires.");
         }
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                loginRequest.getEmail(),
-                loginRequest.getPassword()
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
-        Authentication authResult = authenticationManager.authenticate(authentication);
+        final User user = userJpaRepository.findFirstByEmail(loginRequest.getEmail()).orElseThrow(()->new UsernameNotFoundException("Not found" ));
 
-        User utilisateur = (User) authResult.getPrincipal();
+        final String jwt= jwtUtil.generateToken(user);
 
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setJwt(jwtUtil.generateToken(utilisateur));
+        LoginResponse loginResponse =new LoginResponse();
+        loginResponse.setId(user.getId());
+        loginResponse.setName(user.getName());
+        loginResponse.setEmail(user.getEmail());
+        loginResponse.setJwt(jwt);
+
         return loginResponse;
     }
 }
